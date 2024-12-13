@@ -75,6 +75,11 @@ applicants_email:email}
       res.send(result)
 
     })
+    app.post('/addNewJob', async (req, res) => {
+      const newJob = req.body;
+      const result = await jobsCollection.insertOne(newJob);
+      res.send(result)
+    })
     app.post('/job_applications', async (req, res) => {
       const data = req.body;
       const result = await jobsApplicationsCollections.insertOne(data);
