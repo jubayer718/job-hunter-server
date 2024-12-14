@@ -50,6 +50,16 @@ async function run() {
       const result = await jobsApplicationsCollections.deleteOne(query)
       res.send(result);
     })
+
+
+    app.get('/job_application/jobs/:job_id', async (req, res) => {
+      const jobId = req.params.job_id;
+      const query = { job_id: jobId };
+      const result = await jobsApplicationsCollections.find(query).toArray();
+      res.send(result)
+    })
+
+    
     app.get('/job_application', async (req, res) => {
       const email = req.query.email;
       const query={
@@ -58,8 +68,8 @@ applicants_email:email}
       const result = await cursor.toArray();
 
       for (const application of result) {
-        console.log(application.
-          job_id)
+        // console.log(application.
+        //   job_id)
         const query1 = { _id: new ObjectId(application.job_id) };
         const job = await jobsCollection.findOne(query1);
         if (job) {
@@ -81,13 +91,41 @@ applicants_email:email}
       res.send(result)
     })
     app.post('/job_applications', async (req, res) => {
-      const data = req.body;
-      const result = await jobsApplicationsCollections.insertOne(data);
+      const application = req.body;
+      const result = await jobsApplicationsCollections.insertOne(application);
+
+      // const id = application.job_id;
+      // const query = { _id: new ObjectId(id) };
+      // const job = await jobsCollection.findOne(query);
+      // const newCount = 0;
+      // if (job.applicationCount) {
+      //    newCount = job.applicationCount + 1;
+
+      // } else {
+      //   newCount=1
+      // }
+
+
+      // // now update the info
+
+      // const filter = { _id: new ObjectId(id) };
+      // const updateDoc = {
+      //   $set: {
+      //     applicationCount: newCount,
+      //   }
+      // }
+      // const updateResult = await jobsCollection.updateOne(filter,updateDoc);
       res.send(result);
 
     })
     app.get('/jobs', async(req, res) => {
-      const cursor = jobsCollection.find();
+
+      const email = req.query.email;
+      let query = {};
+      if (email) {
+        query={hr_email:email}
+      }
+      const cursor = jobsCollection.find(query);
       const result = await cursor.toArray();
       res.send(result);
     })
