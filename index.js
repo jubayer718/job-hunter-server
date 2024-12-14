@@ -58,8 +58,19 @@ async function run() {
       const result = await jobsApplicationsCollections.find(query).toArray();
       res.send(result)
     })
+    app.patch('/job_application/:id', async (req, res) => {
+      const id = req.params.id;
+      const statusData = req.body;
+      const filter = { _id: new ObjectId(id) };
+      const updateDoc = {
+        $set: {
+          status: statusData,
+        }
+      }
+      const result = await jobsApplicationsCollections.updateOne(filter, updateDoc);
+      res.send(result)
+})
 
-    
     app.get('/job_application', async (req, res) => {
       const email = req.query.email;
       const query={
